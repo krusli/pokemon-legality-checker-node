@@ -1,4 +1,16 @@
 var pokemonURL = "http://assets.pokemon.com//assets/cms2/img/pokedex/detail/";
+var pad = function(value) {
+  var valueStr = value.toString();
+  if (valueStr.length == 1) {
+    valueStr = "00" + valueStr;
+  }
+  else if (valueStr.length == 2) {
+    valueStr = "0" + valueStr;
+  }
+  var url = "http://assets.pokemon.com//assets/cms2/img/pokedex/detail/";
+  var format = ".png";
+  return url + valueStr + format;
+}
 
 // helper functions for Pokemon data display
 var populateResults = function(legality, parsed) {
@@ -11,10 +23,21 @@ var populateResults = function(legality, parsed) {
     if (i%3 == 0)     htmlString += '<div class="row">';
     htmlString +=                      '<div class="col-sm-4">';
     htmlString +=                       '<div class="results-thumbs thumbnail">';
-    htmlString +=                         '<img src="' + pokemonURL + parsed[key].dexNo + '.png">';
+    htmlString +=                         '<img src="' + pad(parsed[key].dexNo) + '">';
     htmlString +=                         '<div class="caption">';
     htmlString +=                           '<h3>' + key + '</h3>'
-    htmlString +=                           '<p>' + legality[key].isLegal ? 'Legal' : 'Not legal' + '</p>';
+
+    if (legality[key].isLegal)  htmlString +=
+                                            '<h4>Legal</h4>'
+    else htmlString +=                      '<h4>Not legal</h4>'
+
+    if (!legality[key].isLegal) {
+      var errors = legality[key].errors;
+      console.log(errors);
+      for (var j=0; j<errors.length; j++) {
+        htmlString += '<p><strong>' + errors[j].field + ': </strong>' + errors[j].message + '</p>';
+      }
+    }
     htmlString +=                         '</div class="caption">';
     htmlString +=                       '</div>';
     htmlString +=                     '</div>';
@@ -138,3 +161,10 @@ $form.on('drop', function(e) {
 $input.on('change', function(e) {
   showFiles(e.target.files);
 });
+
+$('#back-btn').on('click', function(e) {
+  $form.removeClass('is-success');
+  $('.upload-box').removeClass('done');
+  $('.main').removeClass('show');
+  $label.html('<strong class="hover-highlight">Choose files</strong><span class="box__dragndrop"> or drag them here.</span>');
+})
