@@ -1,3 +1,36 @@
+var pokemonURL = "http://assets.pokemon.com//assets/cms2/img/pokedex/detail/";
+
+// helper functions for Pokemon data display
+var populateResults = function(legality, parsed) {
+  // $('.results').html("");  // clear existing html
+  var htmlString = "";
+
+  var i=0;
+  for (var key in legality) { // same for parsed
+    // var dexNo = parsed.key.dexNo;
+    if (i%3 == 0)     htmlString += '<div class="row">';
+    htmlString +=                      '<div class="col-sm-4">';
+    htmlString +=                       '<div class="results-thumbs thumbnail">';
+    htmlString +=                         '<img src="' + pokemonURL + parsed[key].dexNo + '.png">';
+    htmlString +=                         '<div class="caption">';
+    htmlString +=                           '<h3>' + key + '</h3>'
+    htmlString +=                           '<p>' + legality[key].isLegal ? 'Legal' : 'Not legal' + '</p>';
+    htmlString +=                         '</div class="caption">';
+    htmlString +=                       '</div>';
+    htmlString +=                     '</div>';
+    if (i%3 == 2) {
+                      htmlString += '</div>';
+    }
+    i++;
+  }
+
+  $('.results').html(htmlString);
+
+
+}
+
+// drag and drop box code
+
 var isAdvancedUpload = function() {
   var div = document.createElement('div');
   return (('draggable' in div) || ('ondragstart' in div && 'ondrop' in div)) && 'FormData' in window && 'FileReader' in window;
@@ -55,6 +88,9 @@ $form.on('submit', function(e) {
       success: function(data) {
         console.log(data);
         $form.addClass('is-success');
+        $('.upload-box').addClass('done');
+        $('.main').addClass('show');
+        populateResults(data.legality, data.parsed);
       },
       error: function() {
         // Log the error, show an alert, whatever works for you

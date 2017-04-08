@@ -1,8 +1,29 @@
-.container {
+.upload-box {
 	width: 100%;
 	max-width: 680px; /* 800 */
 	text-align: center;
 	margin: 0 auto;
+}
+
+.upload-box.done { /* when done with the container, hide it */
+  display: none;
+}
+
+.main {
+  display: none;
+}
+
+.main .show {
+  display: block;
+}
+
+.center-align {
+  width: 100%;
+  text-align: center;
+}
+
+.results-thumbs {
+  padding: 10px;
 }
 
 /*.hover-highlight {
