@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <%include partials/templates/head.ejs%>
+</head>
+
+<body>
+    <header>
+        <%include partials/templates/navbar.ejs%>
+    </header>
+
+    <section>
+        <%if(pageId==='home'){%>
+        <%include partials/content/homePage.ejs%>
+        <%}%>
+    </section>
+    <%include partials/templates/defaultjs.ejs%>
+</body>
+
+</html>
