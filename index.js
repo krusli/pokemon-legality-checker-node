@@ -1,4 +1,4 @@
-var checker = require('pokemon-legality-checker');
+var legalityCheck = require('pokemon-legality-checker');
 // const pk6Parse = require('pk6parse');
 var pkparse = require('pkparse');
 var express = require('express');
@@ -17,11 +17,50 @@ app.get('/', function(req, res){
 })
 
 app.post('/upload', function(req, res) {
-  if (!req.files) {
+  if (!req.files) { /* if no files sent */
     res.sendStatus(400).send('No files were uploaded.');
   }
-  console.log(req.files);
-  res.sendStatus(200);
+
+  var files = req.files["files[]"];
+  var jsonResponse = {"status": "success"};
+  var pokemon = {};
+  var legality = {};
+  // console.log(files);
+
+  if (files instanceof Array) { // if files is an Array (multiple files uploaded)
+    for (var i=0; i<files.length; i++) {
+      var gen = parseInt(files[i].name.slice(-1));
+      console.log(gen);
+      var parsed = pkparse.parseBuffer(files[i].data, {parseNames: true, gen: gen});
+      pokemon[files[i].name] = parsed;
+    }
+  }
+  else {  // single file
+    var gen = parseInt(files.name.slice(-1));
+    console.log(gen);
+    var parsed = pkparse.parseBuffer(files.data, {parseNames: true, gen: gen});
+    pokemon[files.name] = parsed;
+  }
+
+  // if (pokemon.length == 0) {  // none of the files have a valid format
+  //   jsonResponse.status = "Failure";
+  //   jsonResponse.reason = "Files are in an invalid format. Please upload .pk6/.pk7 files."
+  // }
+
+  // console.log(pokemon);
+
+  /* check parsed pokemon */
+  for (var key in pokemon) {
+    // console.log("Checking legality of", entry);
+    var entry = pokemon[key];
+    // console.log(entry);
+    legality[key] = legalityCheck(entry);
+  }
+
+  jsonResponse.legality = legality; // add to response
+  jsonResponse.parsed = pokemon;
+
+  res.json(jsonResponse)
 })
 
 app.listen(3000, function(req, res){

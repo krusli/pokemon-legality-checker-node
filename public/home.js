@@ -45,7 +45,7 @@ $form.on('submit', function(e) {
       url: $form.attr('action'),
       type: $form.attr('method'),
       data: ajaxData,
-      // dataType: 'json',  // TODO: add JSON response back. If file(s) are valid pokemon files, redirect to new page
+      dataType: 'json',  // TODO: add JSON response back. If file(s) are valid pokemon files, redirect to new page
       cache: false,
       contentType: false,
       processData: false,
@@ -53,6 +53,7 @@ $form.on('submit', function(e) {
         $form.removeClass('is-uploading');
       },
       success: function(data) {
+        console.log(data);
         $form.addClass('is-success');
       },
       error: function() {
