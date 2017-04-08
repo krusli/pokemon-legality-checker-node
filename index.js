@@ -1,10 +1,12 @@
 var checker = require('pokemon-legality-checker');
-// var pk6Parse = require('pk6parse');
+// const pk6Parse = require('pk6parse');
 var pkparse = require('pkparse');
 var express = require('express');
+var fileUpload = require('express-fileupload');
 var app = express();
 
 app.use(express.static('public'));
+app.use(fileUpload());
 app.set('view engine','ejs');
 
 // Create route for the root
@@ -15,8 +17,11 @@ app.get('/', function(req, res){
 })
 
 app.post('/upload', function(req, res) {
+  if (!req.files) {
+    res.sendStatus(400).send('No files were uploaded.');
+  }
   console.log(req.files);
-  res.send(200);
+  res.sendStatus(200);
 })
 
 app.listen(3000, function(req, res){

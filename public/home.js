@@ -45,7 +45,7 @@ $form.on('submit', function(e) {
       url: $form.attr('action'),
       type: $form.attr('method'),
       data: ajaxData,
-      dataType: 'json',
+      // dataType: 'json',  // TODO: add JSON response back. If file(s) are valid pokemon files, redirect to new page
       cache: false,
       contentType: false,
       processData: false,
@@ -53,8 +53,7 @@ $form.on('submit', function(e) {
         $form.removeClass('is-uploading');
       },
       success: function(data) {
-        $form.addClass( data.success == true ? 'is-success' : 'is-error' );
-        if (!data.success) $errorMsg.text(data.error);
+        $form.addClass('is-success');
       },
       error: function() {
         // Log the error, show an alert, whatever works for you
@@ -93,7 +92,7 @@ var $input = $form.find('input[type="file"]'),
 
 $form.on('drop', function(e) {
   droppedFiles = e.originalEvent.dataTransfer.files; // the files that were dropped
-  console.log(droppedFiles);
+  // console.log(droppedFiles);
   showFiles( droppedFiles );
 });
 
